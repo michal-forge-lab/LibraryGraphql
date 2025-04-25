@@ -17,21 +17,18 @@ public class Query
         _factory = factory;
     }
 
-    // prosta lista autorów
     public async Task<IEnumerable<Author>> GetAuthorsAsync()
     {
         using var db = _factory.CreateDbContext();
         return await db.Authors.ToListAsync();
     }
 
-    // prosta lista ksi¹¿ek
     public async Task<IEnumerable<Book>> GetBooksAsync()
     {
         using var db = _factory.CreateDbContext();
         return await db.Books.ToListAsync();
     }
 
-    // przyk³adowa paginacja "rêczna"
     public async Task<AuthorPage> GetAuthorsPagedAsync(int skip = 0, int take = 10)
     {
         using var db = _factory.CreateDbContext();
@@ -45,5 +42,4 @@ public class Query
     }
 }
 
-// pomocniczy typ do paginacji
 public record AuthorPage(int TotalCount, IEnumerable<Author> Nodes);

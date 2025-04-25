@@ -9,11 +9,9 @@ using LibraryGraphql.GraphQL;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1) Rejestrujemy fabrykę kontekstów
 builder.Services.AddPooledDbContextFactory<LibraryDbContext>(opt =>
     opt.UseInMemoryDatabase("Library"));
 
-// 2) Konfigurujemy GraphQL
 builder.Services
     .AddDbContext<LibraryDbContext>(opt =>            
         opt.UseInMemoryDatabase("Library"))
@@ -27,7 +25,6 @@ builder.Services
 
 var app = builder.Build();
 
-// 3) Seed danych
 using (var scope = app.Services.CreateScope())
 {
     var factory = scope.ServiceProvider
@@ -52,7 +49,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-// 4) Mapujemy endpoint
 app.MapGraphQL();
 
 app.Run();

@@ -1,6 +1,6 @@
 ﻿# 📚 Library GraphQL API
 
-Minimalna aplikacja **.NET 8 + Hot Chocolate 15** do zarządzania autorami i książkami przez GraphQL.
+A minimal **.NET 8 + Hot Chocolate 15** application for managing authors and books via GraphQL.
 
 ---
 
@@ -8,12 +8,12 @@ Minimalna aplikacja **.NET 8 + Hot Chocolate 15** do zarządzania autorami i ksi
 
 | Area      | What you get                                                           |
 |-----------|-------------------------------------------------------------------------|
-| GraphQL   | `/graphql` endpoint, automatyczne schema & introspekcja                 |
+| GraphQL   | `/graphql` endpoint, auto-generated schema & introspection              |
 | Queries   | `authors`, `books`, `authorsPaged(skip, take)`                          |
 | Mutations | `addAuthor(name)`, `addBook(title, authorId)`                            |
-| EF Core   | In-Memory baza danych, fabryka DbContext, seed danych                   |
-| Scripts   | PowerShell helpers pod `scripts/ps/` do testowania API                  |
-| Workshop  | Jedno plikowy `Program.cs`, oddzielne Query i Mutation                  |
+| EF Core   | In-Memory database, pooled `DbContextFactory`, seeded initial data       |
+| Scripts   | PowerShell helpers under `scripts/ps/` for easy testing                  |
+| Workshop  | Single-file `Program.cs`, clear separation of Queries and Mutations      |
 
 ---
 
@@ -37,13 +37,13 @@ GraphQL endpoint → POST http://localhost:61483/graphql
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/ps/get-books.ps1` | List books + author |
-| `scripts/ps/get-authors-paged.ps1 -Skip 0 -Take 2` | Paged authors |
-| `scripts/ps/add-author.ps1 -Name "New Author"` | Add an author |
-| `scripts/ps/add-book.ps1 -Title "Title" -AuthorId 1` | Add a book |
-| `scripts/ps/schema-introspection.ps1` | Show schema types |
+| `scripts/ps/get-books.ps1` | List books with their authors |
+| `scripts/ps/get-authors-paged.ps1 -Skip 0 -Take 2` | Paginated authors |
+| `scripts/ps/add-author.ps1 -Name "New Author"` | Add a new author |
+| `scripts/ps/add-book.ps1 -Title "Title" -AuthorId 1` | Add a new book |
+| `scripts/ps/schema-introspection.ps1` | View available schema types |
 
-### Print result nicely:
+### Pretty print the result:
 
 ```powershell
 .\scripts\ps\get-books.ps1 | ConvertTo-Json -Depth 5
@@ -56,14 +56,14 @@ GraphQL endpoint → POST http://localhost:61483/graphql
 ```text
 LibraryGraphqlFixed
  ├─ GraphQL/
- │   ├─ Query.cs          # resolvery GET
- │   └─ Mutation.cs       # resolvery POST
+ │   ├─ Query.cs          # resolvers for reading data
+ │   └─ Mutation.cs       # resolvers for writing data
  ├─ Models/
  │   ├─ Author.cs
  │   └─ Book.cs
  ├─ Data/
  │   └─ LibraryDbContext.cs
- ├─ Program.cs            # minimal hosting, seeding bazy
+ ├─ Program.cs            # minimal hosting + database seeding
  └─ scripts/ps/           # PowerShell helper scripts
 ```
 
@@ -73,23 +73,23 @@ LibraryGraphqlFixed
 
 | Idea | Hint |
 |------|------|
-| Update / delete mutations | Dodaj metody w `Mutation.cs` |
-| Paging / Filtering / Sorting | Atrybuty `[UsePaging]`, `[UseFiltering]`, `[UseSorting]` |
-| Persisted Queries | `.AddReadPersistedQueries()` |
-| SQL Server | Podmiana `UseInMemoryDatabase` na `UseSqlServer` |
-| Authentication | Dodanie `builder.Services.AddAuthorization()` + `[Authorize]` |
+| Add Update/Delete mutations | Add new methods in `Mutation.cs` |
+| Pagination / Filtering / Sorting | Use attributes like `[UsePaging]`, `[UseFiltering]`, `[UseSorting]` |
+| Persisted Queries | Enable with `.AddReadPersistedQueries()` |
+| Switch to SQL Server | Replace `UseInMemoryDatabase` with `UseSqlServer` |
+| Authentication and Authorization | Add `builder.Services.AddAuthorization()` + `[Authorize]` attributes |
 
 ---
 
 ## 🤝 Suggested Pair-Programming Flow
 
-1. **Start (10 min)** — clone repo, `dotnet run`, strzel pierwsze zapytanie w Playground.
-2. **Dodaj nową mutację** — zmiana roli driver/navigator co 15 min.
-3. **Snapshot test** — np. testy queries w xUnit + Snapshooter.
-4. **Retro (5 min)** — wnioski i dalsze kroki.
+1. **Kick-off (10 min)** — clone the repo, run `dotnet run`, make your first query in Playground.
+2. **Add a new mutation together** — switch driver/navigator every 15 minutes.
+3. **Snapshot testing** — create a simple query test using xUnit + Snapshooter.
+4. **Retro (5 min)** — discuss challenges and next steps.
 
 ---
 
 ## 📜 License
 
-MIT — możesz używać, modyfikować i rozbudowywać do woli.
+MIT — free to use, modify, and extend.
